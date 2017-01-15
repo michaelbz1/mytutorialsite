@@ -16,86 +16,33 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-        <!-- jQuery -->
+
+    <!-- Ace editor -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js" type="text/javascript" charset="utf-8"></script>
+
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-1.8.2.min.js"></script>
 
     <link href="mycss.css" rel="stylesheet">
 
-
-  </head>
-  <body onresize="myFunction()">
-
-
-<header>Header</header>
-<div class="container">
-
-    <div class="row">
-        <div style="background: red;" class="col-xs-3 no-float">Navigation</div>
-        <div class="col-xs-9 no-float">Content</div>
-    </div>
-
-</div>
-<footer>Footer
-            <button class="initialism slide_open btn btn-success">Slide</button>
-</footer>
-
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
-    <!-- jQuery Popup Overlay -->
-    <script src="jquery.popupoverlay.js"></script>
-
-<!-- Slide in -->
-
-<div id="slide" class="well">
-<h4>Slide in example</h4>
-<pre class="prettyprint">
-<code>$('#slide').popup({
-  outline: true, // optional
-  focusdelay: 400, // optional
-  vertical: 'top' //optional
-});
-</code>
-</pre>
-<pre class="prettyprint">
-<code>#slide_background {
-  transition: all 0.3s 0.3s;
-}
-#slide,
-#slide_wrapper {
-  transition: all 0.3s ease-out;
-}
-#slide {
-  transform: translateX(0) translateY(-40%);
-}
-.popup_visible #slide {
-  transform: translateX(0) translateY(0);
-}
-</code>
-</pre>
-    <button class="slide_close btn btn-default">Close</button>
-</div>
-
-<script>
-$(document).ready(function () {
-
-    $('#slide').popup({
-        focusdelay: 400,
-        outline: true,
-        vertical: 'top'
-    });
-
-});
-</script>
-
+<!-- Ace editor style -->
+<style type="text/css" media="screen">
+    #editor { 
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+</style>
+<!-- Ace editor style -->
 <style>
 #slide_background {
     -webkit-transition: all 0.3s 0.3s;
@@ -115,6 +62,211 @@ $(document).ready(function () {
             transform: translateX(0) translateY(-40%);
 }
 .popup_visible #slide {
+    -webkit-transform: translateX(0) translateY(0);
+       -moz-transform: translateX(0) translateY(0);
+        -ms-transform: translateX(0) translateY(0);
+            transform: translateX(0) translateY(0);
+}
+</style>
+
+
+<script>
+$(document).ready(function(){
+
+// Set up slide popup stuff
+  $('#slide').popup({
+      focusdelay: 400,
+      outline: true,
+      vertical: 'top'
+  });
+
+  $('#slide_verify').popup({
+      focusdelay: 400,
+      outline: true,
+      vertical: 'top'
+  });
+
+
+$('#moveon-btn').prop('disabled', true);
+$("#answer_content").toggle();
+//document.getElementById("moveon-btn").style.visibility = "hidden";
+
+function HTMLEncode(str){
+  var i = str.length,
+      aRet = [];
+
+  while (i--) {
+    var iC = str[i].charCodeAt();
+    if (iC < 65 || iC > 127 || (iC>90 && iC<97)) {
+      aRet[i] = '&#'+iC+';';
+    } else {
+      aRet[i] = str[i];
+    }
+   }
+  return aRet.join('');    
+}
+
+var code_before1 ="<style>\nh2{color:red;}\n</style>\n<h2>In the following code</h2>\n";
+code_encoded = HTMLEncode(code_before1);
+
+var answer = "<style>\nh2{color:red;}\n</style>\n<h2>In the following code</h2>\n<p>Place the following</p>";
+
+var full_code = code_encoded;
+
+document.getElementById("editor").innerHTML = full_code;
+document.getElementById("answer_content").innerHTML = answer;
+
+   var textarea = $('#content');
+
+
+//   var editor = ace.edit("editor");
+//   editor.setTheme("ace/theme/twilight");
+//   editor.getSession().setMode("ace/mode/html");
+
+// Ace editor stuff
+
+
+   var editor = ace.edit("editor");
+   editor.setTheme("ace/theme/monokai");
+   editor.getSession().setMode("ace/mode/html");
+
+   editor.getSession().on('change', function () {
+       textarea.val(editor.getSession().getValue());
+       mytext = editor.getSession().getValue();
+       document.getElementById("editor2").innerHTML = mytext;
+      
+      //alert (mytext);
+      //alert (answer);
+      if (mytext == answer) {
+       alert ("yeah!");
+       $('#moveon-btn').prop('disabled', false);
+
+       }
+   });
+
+   textarea.val(editor.getSession().getValue());
+
+   $("#toggletextarea-btn").on('click', function () {
+       //Code here to display warning... Are you sure?
+      slide_verify.click();
+
+
+       $("#answer_content").toggle();
+       $(this).text(function (i, text) {
+           return text === "Hide Answer" ? "Show Answer" : "Hide Answer";
+       });
+   });
+
+   $("#alertcontent-btn").on('click', function () {
+       alert(textarea.val());
+       document.getElementById("content2").innerHTML = mytext;
+       document.getElementById("content2").style.color = "blue";
+   });
+
+});
+
+  </script> 
+
+
+  </head>
+  <body onresize="myFunction()">
+
+
+<header>Header<br>header<br>header</header>
+<div class="container">
+
+    <div class="row">
+        <div id="left" class="col-xs-3 no-float">
+
+              <div id="explain">
+                  <p>Enter the code for a paragraph with the text "Place the following".</p>
+                  <textarea name="answer_content" id="answer_content" rows="5" cols="70" disabled="disabled"></textarea>
+                  <button class="btn btn-primary" id="toggletextarea-btn">Show Answer</button>
+                  <!--
+                  <button class="btn btn-default btn-invisible" id="alertcontent-btn">Alert Content</button>
+                  -->
+                  <button class="btn btn-warning" id="moveon-btn">Move on</button>
+              </div>
+
+        </div>
+          <div id="right" class="col-xs-9 no-float">
+            <!-- ACE EDITOR CODE RUNS FROM BELOW  -->
+            <div id="editor"></div>
+          </div>
+    </div>
+</div>
+
+<footer>
+  <button id="popup_button" class="initialism slide_open btn btn-success">Slide</button>
+  <button class="slide_verify_open">Open popup</button>
+</footer>
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- jQuery Popup Overlay -->
+    <script src="jquery.popupoverlay.js"></script>
+
+<!-- Slide in Show What it would look like in a browser-->
+<div id="slide" class="well">
+<h4>Slide in example</h4>
+<pre class="prettyprint">
+<!--
+<code>   
+      <textarea name="content2" id="content2" disabled="disabled"></textarea>
+</code>
+-->
+   <div id="editor2">
+      <textarea name="content2" id="content2" disabled="disabled"></textarea>
+    </div>
+</pre>
+</pre>
+    <button class="slide_close btn btn-default">Close</button>
+</div>
+
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+
+<!-- Are you sure?  -->
+<div id="slide_verify" class="well">
+<h4>Are you sure?</h4>
+<pre class="prettyprint">
+<!--
+<code>   
+      <textarea name="content2" id="content2" disabled="disabled"></textarea>
+</code>
+-->
+   <div id="slide_verify_text">
+      <p>Caution:  by clicking show answer, <br>you will not get credit for this <br>question.  However, you can re-take the lesson at a later point <br>to get a better score.</p>
+      <p>Are you sure you want to see the answer?</p>
+    </div>
+</pre>
+</pre>
+    <button class="slide_verify_close btn btn-default">Close</button>
+</div>
+
+
+
+<style>
+#slide_verify_background {
+    -webkit-transition: all 0.3s 0.3s;
+       -moz-transition: all 0.3s 0.3s;
+            transition: all 0.3s 0.3s;
+}
+#slide_verify,
+#slide_verify_wrapper {
+    -webkit-transition: all 0.4s;
+       -moz-transition: all 0.4s;
+            transition: all 0.4s;
+}
+#slide_verify {
+    -webkit-transform: translateX(0) translateY(-40%);
+       -moz-transform: translateX(0) translateY(-40%);
+        -ms-transform: translateX(0) translateY(-40%);
+            transform: translateX(0) translateY(-40%);
+}
+.popup_visible #slide_verify {
     -webkit-transform: translateX(0) translateY(0);
        -moz-transform: translateX(0) translateY(0);
         -ms-transform: translateX(0) translateY(0);
