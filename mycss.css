@@ -1,0 +1,75 @@
+html {
+    height:100%;
+}
+body {
+    height:100%;
+}
+.container {
+    height: calc(100% - 50px);
+}
+
+.container {
+    display:table;
+    width: 100%;
+    margin-top: -50px;
+    padding: 50px 0 0 0; /*set left/right padding according to needs*/
+    box-sizing: border-box;
+
+}
+
+.row {
+    height: 100%;
+    display: table-row;
+    
+    border-style: solid ;
+    border-color: #0f0;
+}
+
+.row .no-float {
+  display: table-cell;
+  float: none;
+}
+
+header, footer {
+    border-style: solid ;
+    border-color: #000;
+    height: 50px;
+
+}
+
+    img {
+        max-width: 100%;
+    }
+    .well {
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        display:none;
+        margin:1em;
+    }
+    pre.prettyprint {
+        padding: 9px 14px;
+    }
+    .fulltable {
+        max-width: 100%;
+        overflow: auto;
+    }
+    .container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .lineheight {
+        line-height: 3em;
+    }
+    .pagetop {
+        background-image: url();
+        background-color: #333;
+        background-attachment: fixed;
+        color: #fff;
+    }
+    .page-header {
+        border-bottom: none;
+    }
+    .initialism {
+        font-weight: bold;
+        letter-spacing: 1px;
+        font-size: 12px;
+    }
