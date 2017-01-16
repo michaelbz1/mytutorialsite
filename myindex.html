@@ -87,6 +87,7 @@ $(document).ready(function(){
   });
 
 
+$('#hide_answer-btn').toggle();
 $('#moveon-btn').prop('disabled', true);
 $("#answer_content").toggle();
 //document.getElementById("moveon-btn").style.visibility = "hidden";
@@ -113,6 +114,7 @@ var answer = "<style>\nh2{color:red;}\n</style>\n<h2>In the following code</h2>\
 
 var full_code = code_encoded;
 
+document.getElementById("editor2").innerHTML = code_before1;
 document.getElementById("editor").innerHTML = full_code;
 document.getElementById("answer_content").innerHTML = answer;
 
@@ -146,22 +148,39 @@ document.getElementById("answer_content").innerHTML = answer;
 
    textarea.val(editor.getSession().getValue());
 
-   $("#toggletextarea-btn").on('click', function () {
+   $("#verify_button").on('click', function () {
        //Code here to display warning... Are you sure?
-      slide_verify.click();
+      var tbutton = document.getElementById("toggletextarea-btn").innerHTML;
+      if (tbutton === "Show Answer") {
+          $("#answer_content").toggle();
+          $("#toggletextarea-btn").toggle();
+          tbutton.innerHTML = "Hide Answer" ? "Show Answer" : "Hide Answer";
+          $('#hide_answer-btn').toggle();
+      }else
+      {
+        //Do nothing
+      }
 
+    }); 
 
-       $("#answer_content").toggle();
-       $(this).text(function (i, text) {
-           return text === "Hide Answer" ? "Show Answer" : "Hide Answer";
+       $("#toggletextarea-btn").text(function (i, text) {
+        if ($("#toggletextarea-btn").text === "Hide Answer") {
+          $("#answer_content").toggle();
+        } 
        });
-   });
 
    $("#alertcontent-btn").on('click', function () {
        alert(textarea.val());
        document.getElementById("content2").innerHTML = mytext;
        document.getElementById("content2").style.color = "blue";
    });
+
+   $("#hide_answer-btn").on('click', function () {
+          $("#answer_content").toggle();
+          $("#toggletextarea-btn").text = "Show Answer";
+   });
+
+
 
 });
 
@@ -181,7 +200,13 @@ document.getElementById("answer_content").innerHTML = answer;
               <div id="explain">
                   <p>Enter the code for a paragraph with the text "Place the following".</p>
                   <textarea name="answer_content" id="answer_content" rows="5" cols="70" disabled="disabled"></textarea>
-                  <button class="btn btn-primary" id="toggletextarea-btn">Show Answer</button>
+
+                  <button class="slide_verify_open btn btn-primary" id="toggletextarea-btn">Show Answer</button>                  
+
+                  <button class="hide_answer_btn btn btn-primary" id="hide_answer-btn">Hide Answer</button>
+<!--
+  <button class="slide_verify_open">Open popup</button>
+-->
                   <!--
                   <button class="btn btn-default btn-invisible" id="alertcontent-btn">Alert Content</button>
                   -->
@@ -198,20 +223,12 @@ document.getElementById("answer_content").innerHTML = answer;
 
 <footer>
   <button id="popup_button" class="initialism slide_open btn btn-success">Slide</button>
-  <button class="slide_verify_open">Open popup</button>
 </footer>
 
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
-    <!-- jQuery Popup Overlay -->
-    <script src="jquery.popupoverlay.js"></script>
-
 <!-- Slide in Show What it would look like in a browser-->
 <div id="slide" class="well">
-<h4>Slide in example</h4>
+<h4></h4>
 <pre class="prettyprint">
 <!--
 <code>   
@@ -242,8 +259,9 @@ document.getElementById("answer_content").innerHTML = answer;
       <p>Are you sure you want to see the answer?</p>
     </div>
 </pre>
-</pre>
-    <button class="slide_verify_close btn btn-default">Close</button>
+
+    <button id="verify_button" class="slide_verify_close btn btn-warning">Yes</button>
+    <button id="verify_close_button" class="slide_verify_close btn btn-default">No</button>
 </div>
 
 
@@ -273,7 +291,12 @@ document.getElementById("answer_content").innerHTML = answer;
             transform: translateX(0) translateY(0);
 }
 </style>
-
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- jQuery Popup Overlay -->
+    <script src="jquery.popupoverlay.js"></script>
 
 <!-- Google Prettify syntax highlighting -->
 <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?autoload=true&lang=css"></script>
